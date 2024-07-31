@@ -36,7 +36,7 @@ vali_set_ = data_set.set('dataset/img',
                          'dataset/ejecta',
                          'dataset/vali_list.txt')
 train_set = DataLoader(train_set_, batch_size)
-# 网络模型
+# model
 train_net = create_model.create()
 print('Network creation completed')
 if is_load_data:
@@ -46,7 +46,7 @@ else:
     torch.save(train_net.state_dict(), weights_init_path)
     print('The initial network has been saved')
 
-# 损失函数
+# loss function
 train_loss = loss.EC_loss().cuda()
 data = {
     'times': -1,
