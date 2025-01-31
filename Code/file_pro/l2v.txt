@@ -1,0 +1,12 @@
+python labelme2voc.py sample/images_ejecta sample/target_ejecta --labels sample/labels_ejecta.txt
+python labelme2voc.py sample/test_set/images_ejecta sample/test_set/target_ejecta --labels sample/test_set/labels_ejecta.txt
+python labelme2voc.py sample/test_set/images_crater sample/test_set/target_crater --labels sample/test_set/labels_crater.txt
+
+python labelme2voc.py all/all_images_crater all/all_images_crater_target --labels labels_crater.txt
+python labelme2voc.py all/all_images_ejecta all/all_images_ejecta_target --labels labels_ejecta.txt
+
+
+python labelme2voc.py new_train_img/img new_train_img/ejecta_target  --labels labels_ejecta.txt
+
+python labelme2voc.py test/test_sample test/test_sample_target --labels labels_crater.txt
+

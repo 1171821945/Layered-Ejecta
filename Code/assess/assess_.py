@@ -5,7 +5,6 @@ import file_pro.json_pro as jp
 import torch
 
 
-# 根据阈值判断每个像素点属于哪种类型
 def get_y2(y, thresh, ori = False):
     if not ori:
         y2 = np.where(y > thresh, 1, 0)
@@ -17,7 +16,6 @@ def get_y2(y, thresh, ori = False):
     return y2
 
 
-# 获取iou
 def get_iou(ac, pre):
     i = (np.sum(ac*pre))
     u = (np.sum(ac + pre) - np.sum(ac*pre))
@@ -25,7 +23,6 @@ def get_iou(ac, pre):
     return iou
 
 
-# 混淆矩阵
 # TP FP
 # FN TN
 def get_conmat(ac, pre):
@@ -69,7 +66,6 @@ def get_miou():
     return ious / test_nums
 
 
-# 对结果取以10为底的对数值
 def get_mtf(thresh):
     sum_TP = 0
     sum_FP = 0

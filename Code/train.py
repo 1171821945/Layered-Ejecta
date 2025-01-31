@@ -20,7 +20,7 @@ lr = init_lr
 
 
 
-net_name = 'emhseu_unet'
+net_name = 'nn(up)0'
 
 # Whether to load data
 is_load_data = False

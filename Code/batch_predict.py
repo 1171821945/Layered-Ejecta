@@ -132,8 +132,3 @@ def batch_predict_(net_name, list_path, x1_dir, x2_dir, predict_img_save_dir, is
         get_predict(i)
 
 
-
-# batch_predict_('cd_b_avgg', '/media/user/PDS_data/CTX_CRATER/crater_int/crater_img/img_name_list',
-#                '/media/user/PDS_data/CTX_CRATER/crater_int/crater_img/img_3c/median_3c/',
-#                    '/media/user/PDS_data/CTX_CRATER/crater_int/crater_img/seg/',
-#                    '/media/user/PDS_data/CTX_CRATER/crater_int/crater_img/predict/median/')

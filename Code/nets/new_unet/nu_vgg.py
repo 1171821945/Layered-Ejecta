@@ -1,9 +1,17 @@
 import torch.nn as nn
 from torch.hub import load_state_dict_from_url
 from attention.ema.ema import EMA, MHEMA, MHEMA_sum, MHEMA_sum2, MHEMA2
+from attention.aa.aa import AgentAttention
+from attention.caa.caa import CAA
+from modules.down_wt import Down_wt
 from modules.wtconv import DepthwiseSeparableConvWithWTConv2d,WTConv2d
-
-
+from modules.CAFM import LinAngularXCA_CA
+from modules.CAFM2 import Attention as CAFM2
+from modules.DWConv import SeparableConv2d as DWConv
+from modules.ASPP import ASPP
+from attention.cbam import CBAM_Attention
+from attention.ca import CA
+from attention.bam import BAM
 import modules
 class VGG(nn.Module):
     def __init__(self, features, num_classes=1000):
@@ -56,16 +64,65 @@ def make_layers(cfg, batch_norm=False, in_channels = 3):
         if v == 'M':
             down_index.append(len(layers))
             layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
+        elif v == 'CD':
+            down_index.append(len(layers))
+            layers += [nn.Conv2d(in_channels, in_channels, kernel_size=2, stride=2)]
+        elif v == 'DW':
+            down_index.append(len(layers))
+            layers += [Down_wt(last_layer_c, last_layer_c)]
+        elif v == 'DWC_DS':
+            down_index.append(len(layers))
+            layers += [DWConv(last_layer_c, last_layer_c, 2, 2)]
+        elif v == 'AD':
+            down_index.append(len(layers))
+            layers += [Down_wt(last_layer_c, last_layer_c)]
+
+
         elif v == 'EMA':
             layers += [EMA(last_layer_c)]
+        elif v == 'CAA':
+            layers += [CAA(last_layer_c)]
         elif v == 'MHEMA':
             layers += [MHEMA(last_layer_c)]
         elif v == 'MHEMA2':
             layers += [MHEMA2(last_layer_c)]
+        elif v == 'MHSEMA':
+            layers += [MHEMA_sum(last_layer_c)]
+        elif v == 'MHSEMA2':
+            layers += [MHEMA_sum2(last_layer_c)]
+        elif v == 'AA':
+            layers += [AgentAttention(last_layer_c, 32*32)]
+        elif v == 'CAFM0':
+            layers += [LinAngularXCA_CA()]
+        elif v == 'CAFM2':
+            layers += [CAFM2(last_layer_c)]
+        elif v == 'ASPP':
+            layers += [ASPP(last_layer_c, last_layer_c, (6, 12, 18))]
+        elif v == 'CBAM':
+            layers += [CBAM_Attention(last_layer_c)]
+        elif v == 'CA':
+            layers += [CA(last_layer_c)]
+        elif v == 'BAM':
+            layers += [BAM(last_layer_c)]
+
 
         else:
-            conv2d = nn.Conv2d(in_channels, v, kernel_size=3, padding=1)
-            layers += [conv2d, nn.ReLU(inplace=True)]
+            if type(v) == str:
+                if v[0:2] == 'WT':
+                    v = int(v[2:])
+                    conv2d = WTConv2d(in_channels, v)
+                elif v[0:3] == 'DWC':
+                    v = int(v[3:])
+                    conv2d = DWConv(in_channels, v, 3, 1, 1)
+                else:
+                    raise
+            else:
+                conv2d = nn.Conv2d(in_channels, v, kernel_size=3, padding=1)
+
+            if batch_norm:
+                layers += [conv2d, nn.BatchNorm2d(v), nn.ReLU(inplace=True)]
+            else:
+                layers += [conv2d, nn.ReLU(inplace=True)]
 
             last_layer_c = v
             in_channels = v

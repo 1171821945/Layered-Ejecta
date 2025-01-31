@@ -1,7 +1,22 @@
 import torch
 from torch import nn
+
+
+
+class Config:
+    def __init__(self, groups=4):
+        self.groups = groups
+
+
+conf = Config()
+
+
+def set_groups(p):
+    conf.groups = p
+
+
 class EMA(nn.Module):
-    def __init__(self, channels, factor=4):
+    def __init__(self, channels, factor=conf.groups):
         super(EMA, self).__init__()
         self.groups = factor
         assert channels // self.groups > 0

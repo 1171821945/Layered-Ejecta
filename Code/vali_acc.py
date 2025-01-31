@@ -1,9 +1,11 @@
 import json
 import torch
 import create_model
+from nets.deeplab.deeplabv3_plus import DeepLab
 import tqdm
 import loss
 import data_set
+import nets.unet
 from torch.utils.data import Dataset, DataLoader
 import assess.process_data
 import file_pro.json_pro

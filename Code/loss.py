@@ -12,6 +12,7 @@ class CE_loss(nn.Module):
         loss = nn.CrossEntropyLoss()(temp_inputs, temp_target)
         return loss
 
+
 class CE_loss(nn.Module):
     def __init__(self, imloss = False):
         super(CE_loss, self).__init__()
@@ -33,4 +34,6 @@ class CE_loss(nn.Module):
                 tag = tags[i].view(-1)
                 loss += nn.CrossEntropyLoss()(inp, tag) / torch.sum(tag)
             return loss
+
+
 
